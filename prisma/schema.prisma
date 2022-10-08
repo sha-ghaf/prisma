@@ -1,0 +1,75 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model Customers {
+    id          Int      @id @default(autoincrement())
+    name        String
+    email       String   @unique
+    phoneNumber String   @unique
+    token       tokens[]
+    // checkedIn   checkedIn[]
+}
+
+model tokens {
+    id         Int          @id @default(autoincrement())
+    customerId Int
+    expiresAt  DateTime
+    customer   Customers    @relation(fields: [customerId], references: [id])
+}
+
+model Admin {
+    id          Int      @id @default(autoincrement())
+    name        String
+    email       String   @unique
+    phoneNumber String   @unique
+    password    String
+    // checkedIn   checkedIn[]
+}
+
+model Rooms {
+    id          Int      @id @default(autoincrement())
+    type        Typy
+    dayCast     Int
+    description String
+    status      Status
+    // checkedIn   checkedIn[]
+}
+
+enum Typy {
+    single
+    double
+}
+enum Status {
+    Available
+    Reserved
+    Disabled
+}
+
+// model checkedIn {
+//     id         Int        // @unique @default(autoincrement())
+//     adminId    Int
+//     customerId Int
+//     roomId     Int
+//     duration   DateTime
+//     cost       Int
+//     feedback   String
+//     startAt    DateTime
+//     endAt      DateTime
+//     customer   Customers  @relation(fields: [customerId], references: [id])
+//     admin      Admin      @relation(fields: [adminId], references: [id])
+//     room       Rooms      @relation(fields: [roomId], references: [id])
+//     @@id([customerId, adminId, roomId])
+// }
+
+
+// npx prisma generate 
+// npx prisma migrate dev
